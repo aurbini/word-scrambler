@@ -1,16 +1,7 @@
 .App {
   text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+  margin-top: 2em;
+  box-sizing: border-box;
 }
 
 .App-header {
@@ -21,18 +12,14 @@
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
-  color: white;
+}
+.scrambled-sentence {
+  color: rgb(25,25,140);
 }
 
-.App-link {
-  color: #61dafb;
+.correct-input {
+  background-color: #4caf50;
 }
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.button {
+  color: #388e3c;
 }

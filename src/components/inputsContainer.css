@@ -1,0 +1,17 @@
+.inputs-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  box-sizing: border-box;
+  width: 500px; 
+  flex-shrink: 0;
+}
+.input-row-container {
+  display: flex;
+  justify-content: space-evenly;
+  box-sizing: border-box;
+  align-items: center;
+}
+.space { 
+  background-color: #ffb74d;
+}

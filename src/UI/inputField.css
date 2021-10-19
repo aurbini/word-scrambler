@@ -1,0 +1,7 @@
+input { 
+  background-color: lightgrey;
+  max-width: 30px;
+}
+.correct-letter-background {
+  background-color: #4caf50;
+}
