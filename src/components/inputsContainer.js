@@ -8,7 +8,7 @@ const InputsContainer = (props) => {
 
 
   const handleChange = e => {
-    const { maxLength, value, name } = e.target
+    const { value, name } = e.target
     const [ , fieldIndex ] = name.split("-")
     let fieldIntIndex = parseInt(fieldIndex, 10);
       props.onLetterGuess(e.target.value, fieldIntIndex, value.length ) 
@@ -44,19 +44,3 @@ const InputsContainer = (props) => {
 }
  
 export default InputsContainer;
-
-
-  // Check if no of char in field == maxlength
-    // if (value.length >= maxLength) {
-    //   console.log('value greater than maxlength' )
-      // It should not be last input field
-      // if (fieldIntIndex < props.sentence.split(' ').join('').length) {
-      //   // Get the next input field using it's name
-      //   const nextfield = document.querySelector(
-      //     `input[name=field-${fieldIntIndex + 1}]`
-      //   );
-      //   // If found, focus the next field
-      //   if (nextfield !== null) {
-      //     nextfield.focus();
-      //   }
-      // }

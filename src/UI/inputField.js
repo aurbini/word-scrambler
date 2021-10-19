@@ -3,8 +3,6 @@ import React from 'react';
 import './inputField.css'
 
 const InputField = (props) => {
-  console.log(props.focusField)
-
   return ( 
     <input 
       className={props.inputColor[props.index] ? "correct-letter-background" : ""}
@@ -17,9 +15,8 @@ const InputField = (props) => {
       name={`field-${props.index}`}
       maxLength="1"
       onChange={props.handleChange}
-      // autoFocus={props.inputColor[props.index - 1] || props.focusField === props.index - 1 ? true : false}
       autoFocus={props.focusField === props.index - 1? true : false}
-      ></input>
+    ></input>
    );
 }
  

@@ -4,25 +4,8 @@ import './App.css';
 import InputsContainer from './components/inputsContainer';
 import Button from './UI/button'
 import WinModal from './UI/winModal';
+import { shuffleLetters } from './utils'
 
-function getRandomInt(n){
-  return Math.floor(Math.random() * n)
-}
-
-function shuffleLetters(innerLetters){
-  const lettersToArray = innerLetters.split('')
-  let lengthOfLetters = lettersToArray.length
-
-  for (let i = 0; i < lettersToArray.length - 1; i++) {
-    let randomInt = getRandomInt(lengthOfLetters)
-    const temp = lettersToArray[i]
-
-    lettersToArray[i] = lettersToArray[randomInt]
-    lettersToArray[randomInt] = temp
-  }
-
-  return lettersToArray.join('')
-}
 
 function App() {
 
@@ -72,7 +55,6 @@ function App() {
   useEffect(()=>{
     if( originalSentence.length !== 0){
       const guessedValuesLettersString = guessedValues.reduce((newArr, currObj) => {
-        console.log(currObj.value)
         newArr.push(currObj.value)
         return newArr
       }, []).join('')
@@ -84,8 +66,6 @@ function App() {
   }, [ sentenceGuessed ])
 
   const checkLetterGuessHandler = (guessedLetter, index, valueLength) => {
-    console.log(`current index is ${index}`)
-    console.log(originalSentence.length)
     if(guessedLetter === originalSentence[index - 1]){
       setInputColorState(colorState => { 
         return { ...colorState,  [index ]: true }
@@ -104,7 +84,6 @@ function App() {
   }
 
   const handleNextButtonClick = () => {
-    console.log(guessedValues.length)
     setScore(score => score + 1)
     setGuessedValues([{index: 0, value: ''}])
     setCounter(counter => counter + 1)
