@@ -15,7 +15,7 @@ const InputsContainer = (props) => {
     // Check if no of char in field == maxlength
     if (value.length >= maxLength) {
       // It should not be last input field
-      if (fieldIntIndex < props.sentence.length) {
+      if (fieldIntIndex < props.sentence.split(' ').join('').length) {
         // Get the next input field using it's name
         const nextfield = document.querySelector(
           `input[name=field-${fieldIntIndex + 1}]`

@@ -4,8 +4,9 @@ import './button.css'
 
 const Button = (props) => {
   return ( 
-    <Button 
-      onClick={props.onNextButtonClick}>Next</Button>
+    <button 
+      className="button"
+      onClick={props.onNextButtonClick}>Next</button>
    );
 }
  

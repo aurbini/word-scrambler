@@ -4,6 +4,7 @@ import './App.css';
 import InputsContainer from './components/inputsContainer';
 import Button from './UI/button'
 
+
 function getRandomInt(n){
   return Math.floor(Math.random() * n)
 }
@@ -21,6 +22,10 @@ function shuffleLetters(innerLetters){
   }
 
   return lettersToArray.join('')
+}
+
+function handleEndGame(score) {
+  return score = 0
 }
 
 function App() {
@@ -60,28 +65,40 @@ function App() {
       })
   }, [counter])
 
+  useEffect(()=>{
+    if(counter === 10){
+      handleEndGame(score)
+    }
+  }, [ score ])
+
+
   const checkLetterGuessHandler = (guessedLetter, index) => {
-    console.log(index)
+    // console.log(originalSentence)
     if(guessedLetter === originalSentence[index - 1]){
       setInputColorState(colorState => { 
         return { ...colorState,  [index ]: true }
       })
     }
+    console.log('set the letter')
     setGuessedValues(guessedValues => {
       return [ ...guessedValues, guessedLetter]
     })
     setFocusField(index)
-    if(index === shuffledSentence.length){
+    if(index === originalSentence.length){     
       setSentenceGuessed(true)
     }
   }
 
   const handleNextButtonClick = () => {
-    if(setGuessedValues.join('') === originalSentence.join('')){
+    console.log(guessedValues.length)
+    if(guessedValues.join('') === originalSentence.join('')){
       setScore(score => score + 1)
     }
+    setGuessedValues([])
     setCounter(counter => counter + 1)
   }
+
+
   if(shuffledSentence.length > 0){  
     gameContent = <InputsContainer 
                     sentence={shuffledSentence}
@@ -100,7 +117,9 @@ function App() {
         <h1>Score: {score}</h1>
       </div>
         {gameContent}
-        {sentenceGuessed && <Button onButtonClick={handleNextButtonClick}/>}
+      <div className="next-button">
+        {sentenceGuessed && <Button onNextButtonClick={handleNextButtonClick} /> }
+      </div>
     </div>
   );
 }
