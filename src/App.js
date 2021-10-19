@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import './App.css';
 import InputsContainer from './components/inputsContainer';
 import Button from './UI/button'
-
+import winModal from './UI/winModal';
 
 function getRandomInt(n){
   return Math.floor(Math.random() * n)
@@ -34,9 +34,10 @@ function App() {
   const [ counter, setCounter  ] = useState(1)
   const [ score, setScore ] = useState(0)
   const [ inputColorState, setInputColorState ] = useState({})
-  const [ originalSentence, setOriginalSentence ] = useState('')
+  const [ originalSentence, setOriginalSentence ] = useState([])
   const [ guessedValues, setGuessedValues ] = useState([])
   const [ sentenceGuessed, setSentenceGuessed ] = useState(false)
+  const [ correctSentenceGuessed, setCorrectSentenceGuessed ] = useState(false)
   const [ focusField, setFocusField ] = useState(0)
 
   let gameContent = ""
@@ -45,6 +46,7 @@ function App() {
     fetch(`https://api.hatchways.io/assessment/sentences/${counter}`)
       .then(response => response.json())
       .then(({data}) => {
+        console.log(data.sentence)
         const sentenceArray = data.sentence.split(' ')
         //go through each word in array
         const shuffledSentence = sentenceArray.map(word => {
@@ -66,34 +68,32 @@ function App() {
   }, [counter])
 
   useEffect(()=>{
-    if(counter === 10){
-      handleEndGame(score)
+    if(guessedValues.length && originalSentence.length !== 0){
+      if(guessedValues.join('') === originalSentence.join('')){
+        console.log('sentences are the same ')
+        setCorrectSentenceGuessed(true)
+      }
     }
-  }, [ score ])
-
+  }, [ sentenceGuessed ])
 
   const checkLetterGuessHandler = (guessedLetter, index) => {
-    // console.log(originalSentence)
     if(guessedLetter === originalSentence[index - 1]){
       setInputColorState(colorState => { 
         return { ...colorState,  [index ]: true }
       })
     }
-    console.log('set the letter')
     setGuessedValues(guessedValues => {
       return [ ...guessedValues, guessedLetter]
     })
     setFocusField(index)
-    if(index === originalSentence.length){     
-      setSentenceGuessed(true)
+    if(index === originalSentence.length){  
+      setSentenceGuessed(true) 
     }
   }
 
   const handleNextButtonClick = () => {
     console.log(guessedValues.length)
-    if(guessedValues.join('') === originalSentence.join('')){
-      setScore(score => score + 1)
-    }
+    setScore(score => score + 1)
     setGuessedValues([])
     setCounter(counter => counter + 1)
   }
@@ -110,6 +110,7 @@ function App() {
   }    
   return (
     <div className="App">
+      {score === 3 ? winModal : ""}
       <div className="heading-container"id={"scrambled-word"}>
         <h1 className="scrambled-sentence">{shuffledSentence} </h1>
         <p>Guess the sentence! start typing</p>
@@ -118,7 +119,7 @@ function App() {
       </div>
         {gameContent}
       <div className="next-button">
-        {sentenceGuessed && <Button onNextButtonClick={handleNextButtonClick} /> }
+        {correctSentenceGuessed && <Button onNextButtonClick={handleNextButtonClick} /> }
       </div>
     </div>
   );
