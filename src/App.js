@@ -106,9 +106,10 @@ function App() {
   const handleNextButtonClick = () => {
     console.log(guessedValues.length)
     setScore(score => score + 1)
-    setGuessedValues([])
+    setGuessedValues([{index: 0, value: ''}])
     setCounter(counter => counter + 1)
     setFocusField(0)
+    setShuffledSentence('')
   }
 
 
