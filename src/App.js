@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import './App.css';
 import InputsContainer from './components/inputsContainer';
 import Button from './UI/button'
-import winModal from './UI/winModal';
+import WinModal from './UI/winModal';
 
 function getRandomInt(n){
   return Math.floor(Math.random() * n)
@@ -22,10 +22,6 @@ function shuffleLetters(innerLetters){
   }
 
   return lettersToArray.join('')
-}
-
-function handleEndGame(score) {
-  return score = 0
 }
 
 function App() {
@@ -110,7 +106,7 @@ function App() {
   }    
   return (
     <div className="App">
-      {score === 3 ? winModal : ""}
+      {score === 3 ? <WinModal /> : ""}
       <div className="heading-container"id={"scrambled-word"}>
         <h1 className="scrambled-sentence">{shuffledSentence} </h1>
         <p>Guess the sentence! start typing</p>

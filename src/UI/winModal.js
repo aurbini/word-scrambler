@@ -7,7 +7,7 @@ const winModal = React.memo(props => {
     <React.Fragment>
       <div className="backdrop" onClick={props.onClose} />
       <div className="win-modal">
-        <h2>You won!</h2>
+        <h2>You win!</h2>
       </div>
     </React.Fragment>
   );

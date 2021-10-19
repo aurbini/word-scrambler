@@ -12,19 +12,11 @@
 .win-modal h2 {
   margin: 0;
   padding: 1rem;
-  background: #ff2058;
-  color: white;
   border-radius: 7px 7px 0 0;
 }
 
 .win-modal p {
     padding: 1rem;
-}
-
-.win-modal__actions {
-    display: flex;
-    justify-content: flex-end;
-    padding: 0 0.5rem;
 }
 
 .backdrop {
@@ -33,6 +25,6 @@
   left: 0;
   width: 100%;
   height: 100vh;
-  background: rgba(0, 0, 0, 0.75);
+  background: #e1e1e1;
   z-index: 50;
 }
