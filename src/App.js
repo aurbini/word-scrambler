@@ -31,7 +31,7 @@ function App() {
   const [ score, setScore ] = useState(0)
   const [ inputColorState, setInputColorState ] = useState({})
   const [ originalSentence, setOriginalSentence ] = useState([])
-  const [ guessedValues, setGuessedValues ] = useState([])
+  const [ guessedValues, setGuessedValues ] = useState([{index: 0, value: ""}])
   const [ sentenceGuessed, setSentenceGuessed ] = useState(false)
   const [ correctSentenceGuessed, setCorrectSentenceGuessed ] = useState(false)
   const [ focusField, setFocusField ] = useState(0)
@@ -42,48 +42,64 @@ function App() {
     fetch(`https://api.hatchways.io/assessment/sentences/${counter}`)
       .then(response => response.json())
       .then(({data}) => {
-        console.log(data.sentence)
-        const sentenceArray = data.sentence.split(' ')
-        //go through each word in array
-        const shuffledSentence = sentenceArray.map(word => {
+        const arrayOfWords = data.sentence.split(' ')
+        const shuffledSentenceString = arrayOfWords.map(word => {
           if(word.length > 3){
             const innerLetters = word.slice(1, word.length - 1)
             return word[0] + shuffleLetters(innerLetters) + word[word.length - 1] 
           }else{
             return word
           }
-        });
-        setOriginalSentence(data.sentence.split('').filter(letter => letter !== ' '))
-        setShuffledSentence(shuffledSentence.join(' '))
-        setInputColorState(data.sentence.split('')
-                            .filter(letter => letter !== ' ')
-                            .reduce((acc, currLetter, currIndex ) => {
-                              return { ...acc, currIndex: false}
-                            } , {}))
+        }).join(' ');
+        const arrayOfLetters = data.sentence.split('').filter(letter => letter !== ' ')
+        setOriginalSentence(arrayOfLetters)
+        setInputColorState(arrayOfLetters.reduce((acc, currLetter, currIndex ) => {
+                            return { ...acc, currIndex: false}
+                          } , {}))
+        setGuessedValues(arrayOfLetters.reduce((newArr, currLetter, currIndex) => {
+                          console.log('reducer function')
+                          newArr.push({
+                            index: currIndex,
+                            value: ""
+                          })
+                          return newArr
+                        }, []))
+        setShuffledSentence(shuffledSentenceString)
+
       })
   }, [counter])
 
   useEffect(()=>{
-    if(guessedValues.length && originalSentence.length !== 0){
-      if(guessedValues.join('') === originalSentence.join('')){
+    if( originalSentence.length !== 0){
+      const guessedValuesLettersString = guessedValues.reduce((newArr, currObj) => {
+        console.log(currObj.value)
+        newArr.push(currObj.value)
+        return newArr
+      }, []).join('')
+      if(guessedValuesLettersString === originalSentence.join('')){
         console.log('sentences are the same ')
         setCorrectSentenceGuessed(true)
       }
     }
   }, [ sentenceGuessed ])
 
-  const checkLetterGuessHandler = (guessedLetter, index) => {
+  const checkLetterGuessHandler = (guessedLetter, index, valueLength) => {
+    console.log(`current index is ${index}`)
+    console.log(originalSentence.length)
     if(guessedLetter === originalSentence[index - 1]){
       setInputColorState(colorState => { 
         return { ...colorState,  [index ]: true }
       })
     }
-    setGuessedValues(guessedValues => {
-      return [ ...guessedValues, guessedLetter]
-    })
-    setFocusField(index)
-    if(index === originalSentence.length){  
-      setSentenceGuessed(true) 
+    const updatedGuessedData = guessedValues.map( obj => (obj.index === index - 1 ? { ...obj, value: guessedLetter} : obj))
+    setGuessedValues(updatedGuessedData)
+    if(guessedLetter.length !== 0){
+      setFocusField((index -1 ) + 1)
+    }else{
+      setFocusField(index -1)
+    }
+  if(index === originalSentence.length){  
+    setSentenceGuessed(true) 
     }
   }
 
@@ -92,6 +108,7 @@ function App() {
     setScore(score => score + 1)
     setGuessedValues([])
     setCounter(counter => counter + 1)
+    setFocusField(0)
   }
 
 
