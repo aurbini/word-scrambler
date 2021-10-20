@@ -52,6 +52,20 @@ function App() {
       })
   }, [counter])
 
+  useEffect(() => {
+    let checkIfAllLettersGuessed = ''
+    for (let i = 0; i < guessedValues.length; i++) {
+      const element = guessedValues[i];
+      if(element.value === '') {
+        checkIfAllLettersGuessed = false
+      }
+    }
+    if(checkIfAllLettersGuessed === false) return
+    else checkIfAllLettersGuessed = true
+    console.log('indexes are not ""')
+    setSentenceGuessed(true) 
+  }, [ guessedValues])
+
   useEffect(()=>{
     if( originalSentence.length !== 0){
       const guessedValuesLettersString = guessedValues.reduce((newArr, currObj) => {
@@ -59,9 +73,8 @@ function App() {
         return newArr
       }, []).join('')
       if(guessedValuesLettersString === originalSentence.join('')){
-        console.log('sentences are the same ')
         setCorrectSentenceGuessed(true)
-      }
+      }else{setSentenceGuessed(false)}
     }
   }, [ sentenceGuessed ])
 
@@ -77,9 +90,6 @@ function App() {
       setFocusField((index -1 ) + 1)
     }else{
       setFocusField(index -1)
-    }
-  if(index === originalSentence.length){  
-    setSentenceGuessed(true) 
     }
   }
 
