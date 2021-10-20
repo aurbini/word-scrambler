@@ -17,7 +17,7 @@ function App() {
   const [ guessedValues, setGuessedValues ] = useState([{index: 0, value: ""}])
   const [ sentenceGuessed, setSentenceGuessed ] = useState(false)
   const [ correctSentenceGuessed, setCorrectSentenceGuessed ] = useState(false)
-  const [ focusField, setFocusField ] = useState(0)
+  const [ focusField, setFocusField ] = useState(1)
 
   let gameContent = ""
 
@@ -36,17 +36,18 @@ function App() {
         }).join(' ');
         const arrayOfLetters = data.sentence.split('').filter(letter => letter !== ' ')
         setOriginalSentence(arrayOfLetters)
-        setInputColorState(arrayOfLetters.reduce((acc, currLetter, currIndex ) => {
-                            return { ...acc, currIndex: false}
-                          } , {}))
-        setGuessedValues(arrayOfLetters.reduce((newArr, currLetter, currIndex) => {
-                          console.log('reducer function')
-                          newArr.push({
-                            index: currIndex,
-                            value: ""
-                          })
-                          return newArr
-                        }, []))
+        setInputColorState(arrayOfLetters
+          .reduce((acc, currLetter, currIndex ) => {
+            return { ...acc, currIndex: false}
+          } , {}))
+        setGuessedValues(arrayOfLetters
+          .reduce((newArr, currLetter, currIndex) => {
+            newArr.push({
+              index: currIndex,
+              value: ""
+            })
+            return newArr
+          }, []))
         setShuffledSentence(shuffledSentenceString)
 
       })
@@ -78,18 +79,24 @@ function App() {
     }
   }, [ sentenceGuessed ])
 
-  const checkLetterGuessHandler = (guessedLetter, index, valueLength) => {
-    if(guessedLetter === originalSentence[index - 1]){
+  const checkLetterGuessHandler = (guessedLetter, inputFieldIndex, valueLength) => {
+    if(guessedLetter === originalSentence[inputFieldIndex - 1]){
       setInputColorState(colorState => { 
-        return { ...colorState,  [index ]: true }
+        return { ...colorState,  [ inputFieldIndex ]: true }
       })
     }
-    const updatedGuessedData = guessedValues.map( obj => (obj.index === index - 1 ? { ...obj, value: guessedLetter} : obj))
+    const updatedGuessedData = guessedValues.map( obj => (obj.index === inputFieldIndex - 1 ? { ...obj, value: guessedLetter} : obj))
     setGuessedValues(updatedGuessedData)
     if(guessedLetter.length !== 0){
-      setFocusField((index -1 ) + 1)
-    }else{
-      setFocusField(index -1)
+      if(inputFieldIndex < originalSentence.length ){
+        const nextField = document.querySelector(`input[name=field-${inputFieldIndex + 1}]`)
+        if(nextField !== null){
+          nextField.focus()
+        }
+      }else{
+        const currentField = document.querySelector(`input[name=field-${inputFieldIndex}]`)
+        currentField.blur()
+      }
     }
   }
 
@@ -129,3 +136,5 @@ function App() {
 }
 
 export default App;
+
+
