@@ -16,7 +16,7 @@ function App() {
   const [ originalSentence, setOriginalSentence ] = useState([])
   const [ guessedValues, setGuessedValues ] = useState([{index: 0, value: ""}])
   const [ sentenceGuessed, setSentenceGuessed ] = useState(false)
-  const [ correctSentenceGuessed, setCorrectSentenceGuessed ] = useState(false)
+  const [ showNextButton, setShowNextButton ] = useState(false)
   const [ focusField, setFocusField ] = useState(1)
 
   let gameContent = ""
@@ -74,7 +74,7 @@ function App() {
         return newArr
       }, []).join('')
       if(guessedValuesLettersString === originalSentence.join('')){
-        setCorrectSentenceGuessed(true)
+        setShowNextButton(true)
       }else{setSentenceGuessed(false)}
     }
   }, [ sentenceGuessed ])
@@ -100,13 +100,16 @@ function App() {
     }
   }
 
-  const handleNextButtonClick = () => {
+  const handleNextButtonClick = event => {
+  
+    event.preventDefault()
+
     setScore(score => score + 1)
     setGuessedValues([{index: 0, value: ''}])
     setCounter(counter => counter + 1)
     setFocusField(0)
     setShuffledSentence('')
-    setCorrectSentenceGuessed(false)
+    setShowNextButton(false)
   }
 
 
@@ -117,6 +120,8 @@ function App() {
                     onLetterGuess={checkLetterGuessHandler}
                     guessedValues={guessedValues}
                     focusFieldIndex={focusField}
+                    showNextButton={showNextButton}
+                    onNextButtonClick={handleNextButtonClick}
                   />   
   }    
   return (
@@ -131,7 +136,6 @@ function App() {
         </div>
           {gameContent}
         <div className="next-button">
-          {correctSentenceGuessed && <Button onNextButtonClick={handleNextButtonClick} /> }
         </div>
       </div>
     </div>

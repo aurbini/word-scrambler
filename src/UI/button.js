@@ -6,7 +6,7 @@ const Button = (props) => {
   return ( 
     <button 
       className="button"
-      onClick={props.onNextButtonClick}>Next</button>
+    >Next</button>
    );
 }
  

@@ -1,22 +1,39 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import './inputsContainer.css'
 import InputField from '../UI/inputField'
+import Button from '../UI/button'
+
+
 
 const InputsContainer = (props) => {
 
-  const handleChange = e => {
+  useEffect(() => {
+    const listener = e => {
+      document.getElementsByClassName('button')[0].click()
+    }
+    if(props.showNextButton){
+      document.addEventListener("keydown", listener)
+    }
+    return () => {
+      document.removeEventListener("keydown", listener)
+    }
+  },[props.showNextButton]) 
+
+  const handleInputChange = e => {
     const { value, name } = e.target
     const [ , fieldIndex ] = name.split("-")
     let fieldIntIndex = parseInt(fieldIndex, 10);
       props.onLetterGuess(e.target.value, fieldIntIndex, value.length ) 
   }
+
   let inputFieldIndex = 0
 
   return (  
-    <div className="inputs-container">
+    <form 
+      className="inputs-container"
+      onSubmit={props.onNextButtonClick}>
        { props.sentence.split(' ').map((word, wordIndex) => {
-         console.log(props.sentence.split(' ').length)
           return (
             <div 
               className="input-row-container"
@@ -31,7 +48,7 @@ const InputsContainer = (props) => {
                         key={letterIndex}
                         className="input" 
                         index={inputFieldIndex}
-                        handleChange={handleChange}
+                        handleChange={handleInputChange}
                         inputColor={props.inputColor}
                         enteredValues={props.guessedValues}
                       />
@@ -45,7 +62,9 @@ const InputsContainer = (props) => {
             </div>
           )
         })}
-    </div>
+    {props.showNextButton && <Button type="submit" /> }
+   
+    </form>
   );
 }
  
