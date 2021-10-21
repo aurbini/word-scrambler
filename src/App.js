@@ -106,6 +106,7 @@ function App() {
     setCounter(counter => counter + 1)
     setFocusField(0)
     setShuffledSentence('')
+    setCorrectSentenceGuessed(false)
   }
 
 
@@ -121,15 +122,17 @@ function App() {
   return (
     <div className="App">
       {score === 3 ? <WinModal /> : ""}
-      <div className="heading-container"id={"scrambled-word"}>
-        <h1 className="scrambled-sentence">{shuffledSentence} </h1>
-        <p>Guess the sentence! start typing</p>
-        <p>The yellow blocks are meant for spaces</p>
-        <h1>Score: {score}</h1>
-      </div>
-        {gameContent}
-      <div className="next-button">
-        {correctSentenceGuessed && <Button onNextButtonClick={handleNextButtonClick} /> }
+      <div className="game-wrapper">
+        <div className="heading-container"id={"scrambled-word"}>
+          <h1 className="scrambled-sentence">{shuffledSentence} </h1>
+          <p>Guess the sentence! start typing</p>
+          <p>The yellow blocks are meant for spaces</p>
+          <h1>Score: {score}</h1>
+        </div>
+          {gameContent}
+        <div className="next-button">
+          {correctSentenceGuessed && <Button onNextButtonClick={handleNextButtonClick} /> }
+        </div>
       </div>
     </div>
   );

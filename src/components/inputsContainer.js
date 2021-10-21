@@ -15,26 +15,33 @@ const InputsContainer = (props) => {
 
   return (  
     <div className="inputs-container">
-       { props.sentence.split(' ').map((word, index) => {
+       { props.sentence.split(' ').map((word, wordIndex) => {
+         console.log(props.sentence.split(' ').length)
           return (
             <div 
               className="input-row-container"
-              key={index}>
-              {
-                word.split('').map((letter, index) => {
+              key={wordIndex}
+            > {
+                word.split('').map((letter, letterIndex) => {
                   inputFieldIndex++
-                  return <InputField 
-                          focusField={props.focusFieldIndex}
-                          key={index}
-                          className="input" 
-                          index={inputFieldIndex}
-                          handleChange={handleChange}
-                          inputColor={props.inputColor}
-                          enteredValues={props.guessedValues}
-                        />
+                  return (
+                    <div>
+                      <InputField 
+                        focusField={props.focusFieldIndex}
+                        key={letterIndex}
+                        className="input" 
+                        index={inputFieldIndex}
+                        handleChange={handleChange}
+                        inputColor={props.inputColor}
+                        enteredValues={props.guessedValues}
+                      />
+                      { letterIndex === word.length -1 && wordIndex < props.sentence.split(' ').length - 1 
+                      ? <input className="space-field" /> : ""}
+                    </div>
+                  )
+                     
                 })
               }
-              <div className="space"></div>
             </div>
           )
         })}

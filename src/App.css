@@ -1,9 +1,21 @@
 .App {
   text-align: center;
-  margin-top: 2em;
   box-sizing: border-box;
+  margin-top: 0;
+  padding: 2rem;
+  width: 100%;
+  height: 100vh;
+  background-color: #e1e1e1;
+  display: flex;
+  justify-content: center;
 }
-
+.game-wrapper {
+  display: flex; 
+  flex-direction: column;
+  width: 70%;
+  padding: 2rem;
+  background-color: white;
+}
 .App-header {
   background-color: #282c34;
   min-height: 100vh;
