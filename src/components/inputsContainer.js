@@ -5,15 +5,17 @@ import InputField from '../UI/inputField'
 import Button from '../UI/button'
 
 
-
 const InputsContainer = (props) => {
-
   useEffect(() => {
     const listener = e => {
       document.getElementsByClassName('button')[0].click()
     }
     if(props.showNextButton){
-      document.addEventListener("keydown", listener)
+      document.addEventListener("keypress", function(e) {
+        if(e.key === 'Enter'){
+          listener()
+        }
+      })
     }
     return () => {
       document.removeEventListener("keydown", listener)
@@ -33,27 +35,28 @@ const InputsContainer = (props) => {
     <form 
       className="inputs-container"
       onSubmit={props.onNextButtonClick}>
-       { props.sentence.split(' ').map((word, wordIndex) => {
+       { props.shuffledSentence.map((shuffledWord, wordIndex) => {
+         const arrayOfShuffledLetters = shuffledWord.split('')
           return (
             <div 
               className="input-row-container"
               key={wordIndex}
             > {
-                word.split('').map((letter, letterIndex) => {
+                arrayOfShuffledLetters.map((letter, letterIndex) => {
                   inputFieldIndex++
                   return (
-                    <div>
+                    <div className="letter-container">
                       <InputField 
                         focusField={props.focusFieldIndex}
-                        key={letterIndex}
+                        key={inputFieldIndex}
                         className="input" 
                         index={inputFieldIndex}
                         handleChange={handleInputChange}
-                        inputColor={props.inputColor}
                         enteredValues={props.guessedValues}
                       />
-                      { letterIndex === word.length -1 && wordIndex < props.sentence.split(' ').length - 1 
-                      ? <input className="space-field" /> : ""}
+                      { letterIndex === shuffledWord.length -1 && wordIndex < props.shuffledSentence.length - 1 
+                      ? <input className="space-field" /> 
+                      : ""}
                     </div>
                   )
                      
@@ -62,7 +65,7 @@ const InputsContainer = (props) => {
             </div>
           )
         })}
-    {props.showNextButton && <Button type="submit" /> }
+    { props.showNextButton && <Button type="submit" /> }
    
     </form>
   );

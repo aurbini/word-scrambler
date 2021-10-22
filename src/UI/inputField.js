@@ -1,15 +1,16 @@
 import React from 'react';
 
 import './inputField.css'
+import { searchThroughArrayOfObjects } from '../utils.js'
 
 const InputField = (props) => {
-  
+
   return ( 
     <input 
-      className={props.inputColor[props.index] ? "correct-letter-background" : ""}
-      value={props.enteredValues.find(letterObject => letterObject.index === props.index - 1).value 
-        ? props.enteredValues.find(letterObject => letterObject.index === props.index - 1).value 
-        : ""}
+      className={`input-field 
+        ${searchThroughArrayOfObjects(props.enteredValues, props.index , 'inputColor') === 'green'
+        ? "correct-letter-background" : "" } `}      
+      value={searchThroughArrayOfObjects(props.enteredValues, props.index, 'value')}
       index={props.index}
       key="inputKey"
       type="text"

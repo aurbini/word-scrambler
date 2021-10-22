@@ -1,8 +1,9 @@
 input { 
   background-color: lightgrey;
-  max-width: 30px;
-  flex-grow: 1;
+  text-align: center;
+  font-size: large;
 }
 .correct-letter-background {
   background-color: #4caf50;
+
 }

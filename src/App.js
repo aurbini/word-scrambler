@@ -2,19 +2,17 @@ import React, { useEffect, useState } from 'react'
 
 import './App.css';
 import InputsContainer from './components/inputsContainer';
-import Button from './UI/button'
 import WinModal from './UI/winModal';
-import { shuffleLetters } from './utils'
+import { stringToArrayOfLetters, stringToArrayOfWords, shuffleSentence, updateArrayOfObjects } from './utils'
 
 
 function App() {
 
-  const [ shuffledSentence, setShuffledSentence ] = useState('')
+  const [ shuffledLettersArray, setShuffledLettersArray ] = useState([])
   const [ counter, setCounter  ] = useState(1)
   const [ score, setScore ] = useState(0)
-  const [ inputColorState, setInputColorState ] = useState({})
   const [ originalSentence, setOriginalSentence ] = useState([])
-  const [ guessedValues, setGuessedValues ] = useState([{index: 0, value: ""}])
+  const [ guessedValues, setGuessedValues ] = useState([{index: 0, value: "", inputColor: "grey" }])
   const [ sentenceGuessed, setSentenceGuessed ] = useState(false)
   const [ showNextButton, setShowNextButton ] = useState(false)
   const [ focusField, setFocusField ] = useState(1)
@@ -25,31 +23,21 @@ function App() {
     fetch(`https://api.hatchways.io/assessment/sentences/${counter}`)
       .then(response => response.json())
       .then(({data}) => {
-        const arrayOfWords = data.sentence.split(' ')
-        const shuffledSentenceString = arrayOfWords.map(word => {
-          if(word.length > 3){
-            const innerLetters = word.slice(1, word.length - 1)
-            return word[0] + shuffleLetters(innerLetters) + word[word.length - 1] 
-          }else{
-            return word
-          }
-        }).join(' ');
-        const arrayOfLetters = data.sentence.split('').filter(letter => letter !== ' ')
+        const arrayOfWords = stringToArrayOfWords(data.sentence)
+        const shuffledSentence = shuffleSentence(arrayOfWords)
+        const arrayOfLetters = stringToArrayOfLetters(data.sentence)
+
         setOriginalSentence(arrayOfLetters)
-        setInputColorState(arrayOfLetters
-          .reduce((acc, currLetter, currIndex ) => {
-            return { ...acc, currIndex: false}
-          } , {}))
         setGuessedValues(arrayOfLetters
           .reduce((newArr, currLetter, currIndex) => {
             newArr.push({
               index: currIndex,
-              value: ""
+              value: '', 
+              inputColor: 'grey'
             })
             return newArr
           }, []))
-        setShuffledSentence(shuffledSentenceString)
-
+        setShuffledLettersArray(shuffledSentence)
       })
   }, [counter])
 
@@ -63,7 +51,6 @@ function App() {
     }
     if(checkIfAllLettersGuessed === false) return
     else checkIfAllLettersGuessed = true
-    console.log('indexes are not ""')
     setSentenceGuessed(true) 
   }, [ guessedValues])
 
@@ -80,12 +67,11 @@ function App() {
   }, [ sentenceGuessed ])
 
   const checkLetterGuessHandler = (guessedLetter, inputFieldIndex, valueLength) => {
+    let inputColor = 'grey';
     if(guessedLetter === originalSentence[inputFieldIndex - 1]){
-      setInputColorState(colorState => { 
-        return { ...colorState,  [ inputFieldIndex ]: true }
-      })
+    inputColor = 'green'
     }
-    const updatedGuessedData = guessedValues.map( obj => (obj.index === inputFieldIndex - 1 ? { ...obj, value: guessedLetter} : obj))
+    const updatedGuessedData = updateArrayOfObjects(guessedValues, guessedLetter, inputFieldIndex, inputColor)
     setGuessedValues(updatedGuessedData)
     if(guessedLetter.length !== 0){
       if(inputFieldIndex < originalSentence.length ){
@@ -101,22 +87,20 @@ function App() {
   }
 
   const handleNextButtonClick = event => {
-  
     event.preventDefault()
 
     setScore(score => score + 1)
     setGuessedValues([{index: 0, value: ''}])
     setCounter(counter => counter + 1)
     setFocusField(0)
-    setShuffledSentence('')
+    setShuffledLettersArray([])
     setShowNextButton(false)
   }
 
 
-  if(shuffledSentence.length > 0){  
+  if(shuffledLettersArray.length > 0){  
     gameContent = <InputsContainer 
-                    sentence={shuffledSentence}
-                    inputColor={inputColorState} 
+                    shuffledSentence={shuffledLettersArray}
                     onLetterGuess={checkLetterGuessHandler}
                     guessedValues={guessedValues}
                     focusFieldIndex={focusField}
@@ -124,17 +108,20 @@ function App() {
                     onNextButtonClick={handleNextButtonClick}
                   />   
   }    
+  const shuffledSentenceString = shuffledLettersArray.join()
   return (
     <div className="App">
       {score === 3 ? <WinModal /> : ""}
       <div className="game-wrapper">
         <div className="heading-container"id={"scrambled-word"}>
-          <h1 className="scrambled-sentence">{shuffledSentence} </h1>
+          <h1 className="scrambled-sentence">{shuffledSentenceString} </h1>
           <p>Guess the sentence! start typing</p>
           <p>The yellow blocks are meant for spaces</p>
           <h1>Score: {score}</h1>
         </div>
+        <div className="game-content-container">
           {gameContent}
+        </div>
         <div className="next-button">
         </div>
       </div>
