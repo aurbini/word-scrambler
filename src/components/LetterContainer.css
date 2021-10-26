@@ -1,0 +1,9 @@
+.letter-container {
+  flex: 1; 
+  margin: 5px; 
+}
+.letter-container input {
+  width: 100%; 
+  height: 100%; 
+  background-color: lightgrey;
+}

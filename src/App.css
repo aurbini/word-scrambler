@@ -41,7 +41,7 @@
   color: #388e3c;
 }
 
-/* Small devices (portrait tablets and large phones, 600px and up) */
+/* Small devices (portrait tablets and large phones, 600px and up)
 @media only screen and (max-width: 600px) {
   html {
     width: 100%;
@@ -88,4 +88,4 @@
   .input-field { 
     max-width: 100px;
   }
-} 
+}  */

@@ -1,24 +1,20 @@
 import React, { useEffect, useState } from 'react'
 
 import './App.css';
-import InputsContainer from './components/inputsContainer';
+import SentenceContainer from './components/SentenceContainer';
 import WinModal from './UI/winModal';
-import { stringToArrayOfLetters, stringToArrayOfWords, shuffleSentence, updateArrayOfObjects } from './utils'
+import { stringToArrayOfLetters, stringToArrayOfWords, shuffleSentence} from './utils'
 
 
 function App() {
 
-  const [ shuffledLettersArray, setShuffledLettersArray ] = useState([])
+  const [ shuffledWordsArray, setShuffledWordsArray ] = useState([])
   const [ counter, setCounter  ] = useState(1)
   const [ score, setScore ] = useState(0)
   const [ originalSentence, setOriginalSentence ] = useState([])
-  const [ guessedValues, setGuessedValues ] = useState([{index: 0, value: "", inputColor: "grey" }])
-  const [ sentenceGuessed, setSentenceGuessed ] = useState(false)
-  const [ showNextButton, setShowNextButton ] = useState(false)
-  const [ focusField, setFocusField ] = useState(1)
+  const [ wordsGuessed, setWordsGuessed ] = useState([])
 
   let gameContent = ""
-
   useEffect(() => {
     fetch(`https://api.hatchways.io/assessment/sentences/${counter}`)
       .then(response => response.json())
@@ -26,89 +22,31 @@ function App() {
         const arrayOfWords = stringToArrayOfWords(data.sentence)
         const shuffledSentence = shuffleSentence(arrayOfWords)
         const arrayOfLetters = stringToArrayOfLetters(data.sentence)
-
-        setOriginalSentence(arrayOfLetters)
-        setGuessedValues(arrayOfLetters
-          .reduce((newArr, currLetter, currIndex) => {
-            newArr.push({
-              index: currIndex,
-              value: '', 
-              inputColor: 'grey'
-            })
-            return newArr
-          }, []))
-        setShuffledLettersArray(shuffledSentence)
+        setOriginalSentence(arrayOfWords)
+        setWordsGuessed(shuffledSentence.map(word => false))
+        setShuffledWordsArray(shuffledSentence)
       })
   }, [counter])
-
-  useEffect(() => {
-    let checkIfAllLettersGuessed = ''
-    for (let i = 0; i < guessedValues.length; i++) {
-      const element = guessedValues[i];
-      if(element.value === '') {
-        checkIfAllLettersGuessed = false
-      }
-    }
-    if(checkIfAllLettersGuessed === false) return
-    else checkIfAllLettersGuessed = true
-    setSentenceGuessed(true) 
-  }, [ guessedValues])
-
-  useEffect(()=>{
-    if( originalSentence.length !== 0){
-      const guessedValuesLettersString = guessedValues.reduce((newArr, currObj) => {
-        newArr.push(currObj.value)
-        return newArr
-      }, []).join('')
-      if(guessedValuesLettersString === originalSentence.join('')){
-        setShowNextButton(true)
-      }else{setSentenceGuessed(false)}
-    }
-  }, [ sentenceGuessed ])
-
-  const checkLetterGuessHandler = (guessedLetter, inputFieldIndex, valueLength) => {
-    let inputColor = 'grey';
-    if(guessedLetter === originalSentence[inputFieldIndex - 1]){
-    inputColor = 'green'
-    }
-    const updatedGuessedData = updateArrayOfObjects(guessedValues, guessedLetter, inputFieldIndex, inputColor)
-    setGuessedValues(updatedGuessedData)
-    if(guessedLetter.length !== 0){
-      if(inputFieldIndex < originalSentence.length ){
-        const nextField = document.querySelector(`input[name=field-${inputFieldIndex + 1}]`)
-        if(nextField !== null){
-          nextField.focus()
-        }
-      }else{
-        const currentField = document.querySelector(`input[name=field-${inputFieldIndex}]`)
-        currentField.blur()
-      }
-    }
-  }
-
+  
+  
   const handleNextButtonClick = event => {
     event.preventDefault()
 
     setScore(score => score + 1)
-    setGuessedValues([{index: 0, value: ''}])
+    setWordsGuessed([])
     setCounter(counter => counter + 1)
-    setFocusField(0)
-    setShuffledLettersArray([])
-    setShowNextButton(false)
+    setShuffledWordsArray([])
   }
 
-
-  if(shuffledLettersArray.length > 0){  
-    gameContent = <InputsContainer 
-                    shuffledSentence={shuffledLettersArray}
-                    onLetterGuess={checkLetterGuessHandler}
-                    guessedValues={guessedValues}
-                    focusFieldIndex={focusField}
-                    showNextButton={showNextButton}
-                    onNextButtonClick={handleNextButtonClick}
+  if(shuffledWordsArray.length > 0){  
+    gameContent = <SentenceContainer 
+                    shuffledWords={shuffledWordsArray}
+                    originalSentence={originalSentence}
+                    onNextButton={handleNextButtonClick}
+                    // showNextButton={showNextButton}
                   />   
   }    
-  const shuffledSentenceString = shuffledLettersArray.join()
+  const shuffledSentenceString = shuffledWordsArray.join(' ')
   return (
     <div className="App">
       {score === 3 ? <WinModal /> : ""}
@@ -122,8 +60,6 @@ function App() {
         <div className="game-content-container">
           {gameContent}
         </div>
-        <div className="next-button">
-        </div>
       </div>
     </div>
   );
@@ -132,3 +68,60 @@ function App() {
 export default App;
 
 
+
+// const showNextButton = () => {
+//   let isWordsCorrect 
+//   if(wordsGuessed.find(false)){
+//     isWordsCorrect = false
+//   }else{
+//     isWordsCorrect = true
+//   }
+//   setWordsGuessed(isWordsCorrect)
+// }
+// useEffect(() => {
+  //   let checkIfAllLettersGuessed = ''
+  //   for (let i = 0; i < guessedValues.length; i++) {
+  //     const element = guessedValues[i];
+  //     if(element.value === '') {
+  //       checkIfAllLettersGuessed = false
+  //     }
+  //   }
+  //   if(checkIfAllLettersGuessed === false) return
+  //   setSentenceGuessed(true) 
+  // }, [ guessedValues])
+
+  // useEffect(()=>{
+  //   if( originalSentence.length !== 0){
+  //     if(guessedValues === originalSentence.join('')){
+  //       setShowNextButton(true)
+  //     }else{
+  //       setSentenceGuessed(false)
+  //     }
+  //   }
+  // }, [ sentenceGuessed ])
+
+ 
+  // const letterGuessHandler = ( letterIndex, guessedLetter ) => {
+  //   const newGuessedValues = [ ...guessedValues ]
+  //   newGuessedValues[letterIndex] = guessedLetter 
+  //   setGuessedValues(newGuessedValues)
+  // }
+ // const letterGuessHandler = (guessedLetter, inputFieldIndex, valueLength) => {
+  //   let inputColor = 'grey';
+  //   if(guessedLetter === originalSentence[inputFieldIndex - 1]){
+  //   inputColor = 'green'
+  //   }
+  //   const updatedGuessedData = updateArrayOfObjects(guessedValues, guessedLetter, inputFieldIndex, inputColor)
+  //   setGuessedValues(updatedGuessedData)
+  //   if(guessedLetter.length !== 0){
+  //     if(inputFieldIndex < originalSentence.length ){
+  //       const nextField = document.querySelector(`input[name=field-${inputFieldIndex + 1}]`)
+  //       if(nextField !== null){
+  //         nextField.focus()
+  //       }
+  //     }else{
+  //       const currentField = document.querySelector(`input[name=field-${inputFieldIndex}]`)
+  //       currentField.blur()
+  //     }
+  //   }
+  // }

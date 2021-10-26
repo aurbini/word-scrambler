@@ -1,0 +1,10 @@
+.word-container {
+  flex: 1;
+  display: flex; 
+  justify-content: space-between;
+}
+.space-field-box {
+  background-color: #ffb74d;
+  flex: 1;
+  margin: 5px;
+}

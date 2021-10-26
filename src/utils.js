@@ -51,3 +51,8 @@ export const updateArrayOfObjects = ( array, updatedletter, indexOfUpdatedLetter
 export const searchThroughArrayOfObjects = (array, index, property) => {
   return array.find(letterObject => letterObject.index === index - 1)[property]
 }
+export const updateWordIndexValue = ( wordArray, index, value ) => {
+  const newWordArray = [ ...wordArray ]
+  newWordArray[index] = value
+  return newWordArray
+}

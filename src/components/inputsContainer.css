@@ -5,6 +5,7 @@
   max-width: 1000px;
   box-sizing: border-box;
   align-items: stretch;
+  justify-content: center;
 }
 .input-row-container {
   display: flex;
@@ -17,7 +18,7 @@
 .letter-container {
   display: flex;
   box-sizing: border-box;
-  justify-content: space-evenly;
+  justify-content: center;
   height: 80%;
   flex: 0 0 auto;
 }
