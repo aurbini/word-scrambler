@@ -5,6 +5,7 @@ import './button.css'
 const Button = (props) => {
   return ( 
     <button 
+      autoFocus="true"
       className="button"
     >Next</button>
    );

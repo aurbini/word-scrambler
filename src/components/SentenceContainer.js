@@ -10,38 +10,35 @@ const SentenceContainer = props => {
   const { 
     shuffledWords, 
     originalSentence, 
-    showNextButton
+    onNextButtonClick
    } = props
   
   
   const [ currentWordIndex, setCurrentWordIndex ] = useState(0)
+  const [ showNextButton, setShowNextButton ] = useState(false)
 
   useEffect(() => {
-    const listener = e => {
-      document.getElementsByClassName('button')[0].click()
+    // console.log({
+    //   currentWordIndex, 
+    //   shuffledWordsLength: shuffledWords.length
+    // })
+    if(currentWordIndex === shuffledWords.length){
+      console.log('sentence complete')
+      setShowNextButton(true)
     }
-    if(props.showNextButton){
-      document.addEventListener("keypress", function(e) {
-        if(e.key === 'Enter'){
-          listener()
-        }
-      })
-    }
-    return () => {
-      document.removeEventListener("keypress", listener)
-    }
-  },[showNextButton]) 
+ 
+  },[ showNextButton, currentWordIndex, shuffledWords  ]) 
 
   const handleWordComplete = index => () => {
     setCurrentWordIndex(index + 1)
+    console.log('word complete')
   }
 
   return (  
     <form 
       className="sentence-container"
-      onSubmit={props.onNextButtonClick}>
+      onSubmit={onNextButtonClick}>
       { shuffledWords.map((shuffledWord, wordIndex) => {  
-          console.log(currentWordIndex)     
           const isCurrentWord  = currentWordIndex === wordIndex  
 
           return <WordContainer 
@@ -53,7 +50,10 @@ const SentenceContainer = props => {
                   />
         }
       )}
-   
+      {showNextButton && <div className="button-container">
+        <Button type='submit'
+        />
+        </div>}
     </form>
   );
 }

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 
 import LetterContainer from './LetterContainer'
 import './WordContainer.css'
@@ -13,13 +13,13 @@ const WordContainer = ( props ) => {
     isCurrentWord
     } = props
 
-    console.log(isCurrentWord)
   const [ wordState, setWordState ] = useState([]) 
   const [ activeLetterIndex, setActiveLetterIndex ] = useState(null)
 
   const lettersArray = word.split('')
   
   const handleLetterGuess = guessedIndex => guessedLetter => {
+    console.log('letter guessed')
     if(guessedLetter === originalWord[guessedIndex]){
       //resetting the word state with the current guessed value
       setWordState(updateWordIndexValue(wordState, guessedIndex, guessedLetter))
@@ -31,30 +31,26 @@ const WordContainer = ( props ) => {
     }
   }
 
-  const handleWordComplete = () => {
+  const handleWordComplete = useCallback(() => {
     setActiveLetterIndex(null)
     onWordComplete()
-  }
+  }, [ onWordComplete ])
   
   useEffect(() => {
-    //  console.log('word state updated', {
-    //   wordState,
-    //   originalWord,
-    //   isCurrentWord,
-    //   activeLetterIndex
-    // })
+   
     if (isCurrentWord && wordState.length === 0 ) {
       setActiveLetterIndex(0)
     }else if(wordState.join('') === originalWord && isCurrentWord){
       handleWordComplete()
     }
-  }, [ wordState, isCurrentWord ])
+  }, [ wordState, isCurrentWord, originalWord, handleWordComplete ])
 
   return (
     <div className="word-container">
       {lettersArray.map((letter, letterIndex) => {
         return (
           <LetterContainer
+            key={letterIndex}
             onLetterGuess={handleLetterGuess(letterIndex)}
             index={letterIndex}
             focusLetter={isCurrentWord && activeLetterIndex }

@@ -10,7 +10,7 @@ const InputField = ( props ) => {
     onValueGuess, 
     index, 
     isFocus } = props
-  console.log(`input should be true if ${isFocus}`)
+  // console.log(`input should be true if ${isFocus}`)
 
   const inputFieldRef = useRef()
 
@@ -19,12 +19,13 @@ const InputField = ( props ) => {
       inputFieldRef.current.focus()
     }
   }, [ isFocus, inputFieldRef ])
-
+  const correctColor = value !== ''
+  
   return ( 
     <input 
       ref={inputFieldRef}
       value={value}
-      className="input-field"
+      className={correctColor ? "correct-input" : ""}
       onChange={(event)=> onValueGuess(event.target.value)}
       autoFocus={isFocus}
       maxLength="1"
@@ -36,21 +37,3 @@ export default InputField;
 
 
 
-
-
-
-
-
-
-     // {
-      //   `input-field 
-      //    ${searchThroughArrayOfObjects(props.enteredValues, props.index , 'inputColor') === 'green'
-      //   ? "correct-letter-background" : "" } `}      
-      // value={searchThroughArrayOfObjects(props.enteredValues, props.index, 'value')}
-      // className={guessedValue}
-      // type="text"
-      // name={`field-${index}`}
-      // maxLength="1"
-      // onChange={onLetterGuess}
-      // autoFocus={focusField}
-      // autoFocus={props.enteredValues.find(letterObject => props.index === 1 & letterObject.value === "") ? true : false}
