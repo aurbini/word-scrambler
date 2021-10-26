@@ -18,10 +18,7 @@ const SentenceContainer = props => {
   const [ showNextButton, setShowNextButton ] = useState(false)
 
   useEffect(() => {
-    // console.log({
-    //   currentWordIndex, 
-    //   shuffledWordsLength: shuffledWords.length
-    // })
+  
     if(currentWordIndex === shuffledWords.length){
       console.log('sentence complete')
       setShowNextButton(true)
@@ -31,7 +28,6 @@ const SentenceContainer = props => {
 
   const handleWordComplete = index => () => {
     setCurrentWordIndex(index + 1)
-    console.log('word complete')
   }
 
   return (  

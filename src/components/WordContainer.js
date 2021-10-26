@@ -19,7 +19,6 @@ const WordContainer = ( props ) => {
   const lettersArray = word.split('')
   
   const handleLetterGuess = guessedIndex => guessedLetter => {
-    console.log('letter guessed')
     if(guessedLetter === originalWord[guessedIndex]){
       //resetting the word state with the current guessed value
       setWordState(updateWordIndexValue(wordState, guessedIndex, guessedLetter))

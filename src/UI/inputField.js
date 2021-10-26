@@ -8,9 +8,7 @@ const InputField = ( props ) => {
   const { 
     value, 
     onValueGuess, 
-    index, 
     isFocus } = props
-  // console.log(`input should be true if ${isFocus}`)
 
   const inputFieldRef = useRef()
 

@@ -10,7 +10,8 @@ const LetterContainer = ( props ) => {
     index,
     focusLetter,  
     value } = props
-
+  
+  //Does the current letter match the focused letter, true or false
   const isFocusLetter = focusLetter === index
 
   useEffect(() => {
@@ -20,7 +21,6 @@ const LetterContainer = ( props ) => {
     <div className="letter-container">
       <InputField 
         isFocus={isFocusLetter}
-        index={index}
         onValueGuess={onLetterGuess}
         value={value || ''}/>
     </div>

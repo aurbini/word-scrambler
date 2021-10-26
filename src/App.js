@@ -44,7 +44,7 @@ function App() {
   const shuffledSentenceString = shuffledWordsArray.join(' ')
   return (
     <div className="App">
-      {score === 3 ? <WinModal /> : ""}
+      {score === 10 ? <WinModal /> : ""}
       <div className="game-wrapper">
         <div className="heading-container"id={"scrambled-word"}>
           <h1 className="scrambled-sentence">{shuffledSentenceString} </h1>

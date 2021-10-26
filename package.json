@@ -2,6 +2,9 @@
   "name": "word-scrambler",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": "12.x"
+  },
   "dependencies": {
     "cra-template": "1.1.2",
     "react": "^17.0.2",
