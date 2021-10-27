@@ -15,7 +15,10 @@ function App() {
 
   let gameContent = ""
   useEffect(() => {
-    fetch(`https://api.hatchways.io/assessment/sentences/${counter}`)
+    console.log(counter)
+    console.log(score)
+    if(counter !== 11){
+      fetch(`https://api.hatchways.io/assessment/sentences/${counter}`)
       .then(response => response.json())
       .then(({data}) => {
         const arrayOfWords = stringToArrayOfWords(data.sentence)
@@ -23,6 +26,7 @@ function App() {
         setOriginalSentence(arrayOfWords)
         setShuffledWordsArray(shuffledSentence)
       })
+    }
   }, [counter])
   
   
