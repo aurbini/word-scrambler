@@ -5,16 +5,34 @@ const getRandomInt = (n) => {
 const shuffleLetters = (innerLetters) => {
   const shuffledlettersArray = innerLetters.split('')
   let lengthOfLetters = shuffledlettersArray.length
-
-  for (let i = 0; i < shuffledlettersArray.length - 1; i++) {
-    let randomInt = getRandomInt(lengthOfLetters)
-    const temp = shuffledlettersArray[i]
-
-    shuffledlettersArray[i] = shuffledlettersArray[randomInt]
-    shuffledlettersArray[randomInt] = temp
+  if(lengthOfLetters !== 2){
+    for (let i = 0; i < shuffledlettersArray.length - 1; i++) {
+      let randomInt = Math.floor(Math.random() * (i + 1))
+      const temp = shuffledlettersArray[i]
+  
+      shuffledlettersArray[i] = shuffledlettersArray[randomInt]
+      shuffledlettersArray[randomInt] = temp
+    }
+  }else{
+    const shuffledShortArrayTemp = [...shuffledlettersArray]
+    shuffledlettersArray[0] = shuffledShortArrayTemp[1]
+    shuffledlettersArray[1] = shuffledShortArrayTemp[0]
   }
+  
 
   return shuffledlettersArray.join('')
+}
+export const shuffleSentence = ( arrayOfWords ) => { 
+  return arrayOfWords.map(word => {
+    if(word.length > 3){
+      console.log('word bigger than 3', word)
+      const innerLetters = word.slice(1, word.length - 1)
+      console.log(innerLetters)
+      return word[0] + shuffleLetters(innerLetters) + word[word.length - 1] 
+    }else{
+      return word
+    }
+  });
 }
 
 export const compareTwoArrays = (arrA, arrB) => {
@@ -30,17 +48,6 @@ export const stringToArrayOfLetters = (string) => {
 
 export const stringToArrayOfWords = ( string ) => {
   return string.split(' ')
-}
-
-export const shuffleSentence = ( arrayOfWords ) => { 
-  return arrayOfWords.map(word => {
-    if(word.length > 3){
-      const innerLetters = word.slice(1, word.length - 1)
-      return word[0] + shuffleLetters(innerLetters) + word[word.length - 1] 
-    }else{
-      return word
-    }
-  });
 }
 
 export const updateArrayOfObjects = ( array, updatedletter, indexOfUpdatedLetter, updatedColor ) => {
