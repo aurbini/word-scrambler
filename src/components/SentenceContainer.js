@@ -1,94 +1,47 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from "react";
 
-import './SentenceContainer.css'
-import WordContainer from './WordContainer'
-import Button from '../UI/button'
+import "./SentenceContainer.css";
+import WordContainer from "./WordContainer";
+import Button from "../UI/button";
+import { compareTwoArrays } from "../utils";
 
-
-
-const SentenceContainer = props => {
-  const { 
-    shuffledWords, 
-    originalSentence, 
-    onNextButtonClick
-   } = props
-  
-  
-  const [ currentWordIndex, setCurrentWordIndex ] = useState(0)
-  const [ showNextButton, setShowNextButton ] = useState(false)
+const SentenceContainer = (props) => {
+  const { shuffledWords, originalWords, onNextButtonClick } = props;
+  const [showNextButton, setShowNextButton] = useState(false);
+  const guessedSentence = useRef([]);
+  const [currentWordIndex, setCurrentWordIndex] = useState(0);
 
   useEffect(() => {
-  
-    if(currentWordIndex === shuffledWords.length){
-      console.log('sentence complete')
-      setShowNextButton(true)
+    if (compareTwoArrays(guessedSentence.current, originalWords)) {
+      setShowNextButton(true);
     }
- 
-  },[ showNextButton, currentWordIndex, shuffledWords  ]) 
+  }, [currentWordIndex, originalWords, shuffledWords.length]);
 
-  const handleWordComplete = index => () => {
-    setCurrentWordIndex(index + 1)
-  }
+  const handleWordComplete = (wordIndex) => (guessedWord) => {
+    setCurrentWordIndex(wordIndex + 1);
+    guessedSentence.current.push(guessedWord);
+  };
 
-  return (  
-    <form 
-      className="sentence-container"
-      onSubmit={onNextButtonClick}>
-      { shuffledWords.map((shuffledWord, wordIndex) => {  
-          const isCurrentWord  = currentWordIndex === wordIndex  
-
-          return <WordContainer 
-                    key={wordIndex}
-                    word={shuffledWord}
-                    originalWord={originalSentence[wordIndex]}
-                    onWordComplete={handleWordComplete(wordIndex)}
-                    isCurrentWord={isCurrentWord}
-                  />
-        }
+  return (
+    <form className='sentence-container' onSubmit={onNextButtonClick}>
+      {shuffledWords.map((shuffledWord, wordIndex) => {
+        return (
+          <WordContainer
+            key={wordIndex}
+            word={shuffledWord}
+            originalWord={originalWords[wordIndex]}
+            onWordComplete={handleWordComplete(wordIndex)}
+            isCurrentWord={currentWordIndex === wordIndex}
+          />
+        );
+      })}
+      {showNextButton && (
+        <div className='button-container'>
+          <Button type='submit' />
+        </div>
       )}
-      {showNextButton && <div className="button-container">
-        <Button type='submit'
-        />
-        </div>}
     </form>
   );
-}
- 
+};
+
 export default SentenceContainer;
-
-
-
-
-
-
-
-
-
-
-
-
-// const nextWordLength = shuffledWords[wordIndex + 1].length
-    // const newCurrentWordIndexes = [ currentWordIndex[0] + wordLength, currentWordIndex[1] + nextWordLength]
-    // setCurrentWordIndexes(newCurrentWordIndexes)
-  // const handleWordLetterGuess = e => {
-  //   const { value, name } = e.target
-  //   const [ , fieldIndex ] = name.split("-")
-  //   let fieldIntIndex = parseInt(fieldIndex, 10);
-
-  // }
-
-      //  { props.showNextButton && <Button type="submit" /> } }
-
-          // const isLastWordInSentence = shuffledWords.length === wordIndex + 1
-
-
-  // const lastLetterInWord = word[word.length - 1]
-        // const firstLetterInWord = word[0]
-        // const isFirstLetter = firstLetterInWord !== ''
-        // const previousDefined = word[index - 1]
-        // const isDefined = guessedLettersArray[index] !== ''
-        // const nextLetterDefinded = guessedLettersArray[index + 1]
-
-        // const isCurrentLetter = ( isFirstLetter && isDefined)
-        //   || (previousDefined )
-        // const guesedValue = ''

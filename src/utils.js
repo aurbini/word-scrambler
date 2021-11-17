@@ -1,65 +1,78 @@
-const getRandomInt = (n) => {
-  return Math.floor(Math.random() * n)
-}
-
 const shuffleLetters = (innerLetters) => {
-  const shuffledlettersArray = innerLetters.split('')
-  let lengthOfLetters = shuffledlettersArray.length
-  if(lengthOfLetters !== 2){
+  const shuffledlettersArray = innerLetters.split("");
+  let lengthOfLetters = shuffledlettersArray.length;
+  if (lengthOfLetters !== 2) {
     for (let i = 0; i < shuffledlettersArray.length - 1; i++) {
-      let randomInt = Math.floor(Math.random() * (i + 1))
-      const temp = shuffledlettersArray[i]
-  
-      shuffledlettersArray[i] = shuffledlettersArray[randomInt]
-      shuffledlettersArray[randomInt] = temp
-    }
-  }else{
-    const shuffledShortArrayTemp = [...shuffledlettersArray]
-    shuffledlettersArray[0] = shuffledShortArrayTemp[1]
-    shuffledlettersArray[1] = shuffledShortArrayTemp[0]
-  }
-  
+      let randomInt = Math.floor(Math.random() * (i + 1));
+      const temp = shuffledlettersArray[i];
 
-  return shuffledlettersArray.join('')
-}
-export const shuffleSentence = ( arrayOfWords ) => { 
-  return arrayOfWords.map(word => {
-    if(word.length > 3){
-      console.log('word bigger than 3', word)
-      const innerLetters = word.slice(1, word.length - 1)
-      console.log(innerLetters)
-      return word[0] + shuffleLetters(innerLetters) + word[word.length - 1] 
-    }else{
-      return word
+      shuffledlettersArray[i] = shuffledlettersArray[randomInt];
+      shuffledlettersArray[randomInt] = temp;
+    }
+  } else {
+    const shuffledShortArrayTemp = [...shuffledlettersArray];
+    shuffledlettersArray[0] = shuffledShortArrayTemp[1];
+    shuffledlettersArray[1] = shuffledShortArrayTemp[0];
+  }
+
+  return shuffledlettersArray.join("");
+};
+export const shuffleSentence = (arrayOfWords) => {
+  return arrayOfWords.map((word) => {
+    if (word.length > 3) {
+      const innerLetters = word.slice(1, word.length - 1);
+      return word[0] + shuffleLetters(innerLetters) + word[word.length - 1];
+    } else {
+      return word;
     }
   });
-}
+};
 
 export const compareTwoArrays = (arrA, arrB) => {
-  for (let i = 0; i < arrA.length; i++) {
-    if(arrA[i] !== arrB[i]) return false
+  if (arrA.length !== arrB.length) {
+    return false;
   }
-  return true
-}
+  for (let i = 0; i < arrA.length; i++) {
+    const word = arrA[i];
+    for (let j = 0; j < word.length; j++) {
+      const letterA = arrA[i][j];
+      const letterB = arrB[i][j];
+      if (letterA !== letterB) {
+        return false;
+      }
+    }
+  }
+  return true;
+};
 
 export const stringToArrayOfLetters = (string) => {
-  return string.split('').filter(letter => letter !== ' ')
-}
+  return string.split("").filter((letter) => letter !== " ");
+};
 
-export const stringToArrayOfWords = ( string ) => {
-  return string.split(' ')
-}
+export const stringToArrayOfWords = (string) => {
+  return string.split(" ");
+};
 
-export const updateArrayOfObjects = ( array, updatedletter, indexOfUpdatedLetter, updatedColor ) => {
-  return array.map( obj => (obj.index === indexOfUpdatedLetter - 1 
-                          ? { ...obj, value: updatedletter, inputColor: updatedColor } : obj))
-} 
+export const updateArrayOfObjects = (
+  array,
+  updatedletter,
+  indexOfUpdatedLetter,
+  updatedColor
+) => {
+  return array.map((obj) =>
+    obj.index === indexOfUpdatedLetter - 1
+      ? { ...obj, value: updatedletter, inputColor: updatedColor }
+      : obj
+  );
+};
 
 export const searchThroughArrayOfObjects = (array, index, property) => {
-  return array.find(letterObject => letterObject.index === index - 1)[property]
-}
-export const updateWordIndexValue = ( wordArray, index, value ) => {
-  const newWordArray = [ ...wordArray ]
-  newWordArray[index] = value
-  return newWordArray
-}
+  return array.find((letterObject) => letterObject.index === index - 1)[
+    property
+  ];
+};
+export const updateWordIndexValue = (wordArray, index, value) => {
+  const newWordArray = [...wordArray];
+  newWordArray[index] = value;
+  return newWordArray;
+};

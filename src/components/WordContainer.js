@@ -1,66 +1,62 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from "react";
 
-import LetterContainer from './LetterContainer'
-import './WordContainer.css'
-import { updateWordIndexValue } from '../utils'
+import LetterContainer from "./LetterContainer";
+import "./WordContainer.css";
+import { updateWordIndexValue } from "../utils";
 
-const WordContainer = ( props ) => {
-
-  const { 
-    word, 
-    originalWord, 
-    onWordComplete, 
-    isCurrentWord
-    } = props
-
-  const [ wordState, setWordState ] = useState([]) 
-  const [ activeLetterIndex, setActiveLetterIndex ] = useState(null)
-
-  const lettersArray = word.split('')
-  
-  const handleLetterGuess = guessedIndex => guessedLetter => {
-    if(guessedLetter === originalWord[guessedIndex]){
-      //resetting the word state with the current guessed value
-      setWordState(updateWordIndexValue(wordState, guessedIndex, guessedLetter))
-      setActiveLetterIndex(activeLetterIndex + 1)
-      //if the user deletes a letter
-    } else if(guessedLetter === '') {
-      //reset the word state
-      setWordState(updateWordIndexValue(wordState, guessedIndex, guessedLetter))
-    }
-  }
+const WordContainer = (props) => {
+  const { word, originalWord, onWordComplete, isCurrentWord } = props;
+  const [wordState, setWordState] = useState(
+    originalWord.split("").map((word) => {
+      return "";
+    })
+  );
+  const [activeLetterIndex, setActiveLetterIndex] = useState(null);
+  const lettersArray = word.split("");
+  const handleLetterGuess = (guessedIndex) => (guessedLetter) => {
+    //resetting the word state with the current guessed value
+    setWordState(updateWordIndexValue(wordState, guessedIndex, guessedLetter));
+  };
 
   const handleWordComplete = useCallback(() => {
-    setActiveLetterIndex(null)
-    onWordComplete()
-  }, [ onWordComplete ])
-  
+    setActiveLetterIndex(null);
+    onWordComplete(wordState);
+  }, [onWordComplete, wordState]);
+
   useEffect(() => {
-   
-    if (isCurrentWord && wordState.length === 0 ) {
-      setActiveLetterIndex(0)
-    }else if(wordState.join('') === originalWord && isCurrentWord){
-      handleWordComplete()
+    if (wordState.find((letter) => letter === "") === "") {
+      setActiveLetterIndex(wordState.indexOf(""));
     }
-  }, [ wordState, isCurrentWord, originalWord, handleWordComplete ])
+  }, [wordState]);
+
+  useEffect(() => {
+    if (isCurrentWord && activeLetterIndex === null) {
+      setActiveLetterIndex(0);
+    } else if (
+      wordState.find((letter) => letter === "") !== "" &&
+      isCurrentWord
+    ) {
+      handleWordComplete();
+    }
+  }, [wordState, isCurrentWord, handleWordComplete, originalWord.length]);
 
   return (
-    <div className="word-container">
+    <div className='word-container'>
       {lettersArray.map((letter, letterIndex) => {
         return (
           <LetterContainer
             key={letterIndex}
             onLetterGuess={handleLetterGuess(letterIndex)}
             index={letterIndex}
-            focusLetter={isCurrentWord && activeLetterIndex }
-            value={wordState[letterIndex]}
+            focusLetter={isCurrentWord && activeLetterIndex}
+            // value={wordState[letterIndex]}
+            isCorrect={wordState[letterIndex] === originalWord[letterIndex]}
           />
-        )
+        );
       })}
-        <div className="space-field-box"></div>
+      <div className='space-field-box'></div>
     </div>
-  )
-}
+  );
+};
 
-export default WordContainer
-
+export default WordContainer;
