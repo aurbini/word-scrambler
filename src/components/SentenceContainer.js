@@ -4,11 +4,12 @@ import "./SentenceContainer.css";
 import WordContainer from "./WordContainer";
 import Button from "../UI/button";
 import { compareTwoArrays } from "../utils";
+import { updateWordIndexValue } from "../utils";
 
 const SentenceContainer = (props) => {
   const { shuffledWords, originalWords, onNextButtonClick } = props;
   const [showNextButton, setShowNextButton] = useState(false);
-  const guessedSentence = useRef([]);
+  const guessedSentence = useRef(originalWords.map((word) => ""));
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
 
   useEffect(() => {
@@ -19,7 +20,15 @@ const SentenceContainer = (props) => {
 
   const handleWordComplete = (wordIndex) => (guessedWord) => {
     setCurrentWordIndex(wordIndex + 1);
-    guessedSentence.current.push(guessedWord);
+    guessedSentence.current = updateWordIndexValue(
+      guessedSentence.current,
+      wordIndex,
+      guessedWord
+    );
+  };
+
+  const changeCurrentWord = (wordIndex) => {
+    setCurrentWordIndex(wordIndex);
   };
 
   return (
@@ -32,6 +41,9 @@ const SentenceContainer = (props) => {
             originalWord={originalWords[wordIndex]}
             onWordComplete={handleWordComplete(wordIndex)}
             isCurrentWord={currentWordIndex === wordIndex}
+            currentWordIndex={currentWordIndex}
+            wordIndex={wordIndex}
+            changeCurrentWord={changeCurrentWord}
           />
         );
       })}

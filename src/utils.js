@@ -34,6 +34,9 @@ export const compareTwoArrays = (arrA, arrB) => {
   }
   for (let i = 0; i < arrA.length; i++) {
     const word = arrA[i];
+    if (arrA[i].length !== arrB[i].length) {
+      return false;
+    }
     for (let j = 0; j < word.length; j++) {
       const letterA = arrA[i][j];
       const letterB = arrB[i][j];

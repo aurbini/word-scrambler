@@ -4,8 +4,21 @@ import LetterContainer from "./LetterContainer";
 import "./WordContainer.css";
 import { updateWordIndexValue } from "../utils";
 
+const findEmptyValue = (arrayOfLetters) => {
+  for (let i = 0; i <= arrayOfLetters.length; i++) {
+    if (arrayOfLetters[i] === "") return i;
+  }
+};
 const WordContainer = (props) => {
-  const { word, originalWord, onWordComplete, isCurrentWord } = props;
+  const {
+    word,
+    originalWord,
+    onWordComplete,
+    isCurrentWord,
+    currentWordIndex,
+    wordIndex,
+    changeCurrentWord,
+  } = props;
   const [wordState, setWordState] = useState(
     originalWord.split("").map((word) => {
       return "";
@@ -13,10 +26,21 @@ const WordContainer = (props) => {
   );
   const [activeLetterIndex, setActiveLetterIndex] = useState(null);
   const lettersArray = word.split("");
-  const handleLetterGuess = (guessedIndex) => (guessedLetter) => {
-    //resetting the word state with the current guessed value
-    setWordState(updateWordIndexValue(wordState, guessedIndex, guessedLetter));
-  };
+
+  const handleLetterGuess =
+    (guessedLetterIndex, wordIndex) => (guessedLetter) => {
+      //resetting the word state with the current guessed value
+      if (guessedLetter === "" && currentWordIndex !== wordIndex) {
+        changeCurrentWord(wordIndex);
+      }
+      setWordState(
+        updateWordIndexValue(wordState, guessedLetterIndex, guessedLetter)
+      );
+      if (guessedLetter !== "") {
+        console.log({ activeLetterIndex });
+        setActiveLetterIndex((activeLetterIndex) => activeLetterIndex + 1);
+      }
+    };
 
   const handleWordComplete = useCallback(() => {
     setActiveLetterIndex(null);
@@ -24,14 +48,15 @@ const WordContainer = (props) => {
   }, [onWordComplete, wordState]);
 
   useEffect(() => {
-    if (wordState.find((letter) => letter === "") === "") {
-      setActiveLetterIndex(wordState.indexOf(""));
+    if (wordState.find((letter) => letter === "")) {
+      setActiveLetterIndex(wordState.indexOf((letter) => letter === ""));
     }
   }, [wordState]);
 
   useEffect(() => {
     if (isCurrentWord && activeLetterIndex === null) {
-      setActiveLetterIndex(0);
+      const emptyValueIndex = findEmptyValue(wordState);
+      setActiveLetterIndex(emptyValueIndex);
     } else if (
       wordState.find((letter) => letter === "") !== "" &&
       isCurrentWord
@@ -46,7 +71,7 @@ const WordContainer = (props) => {
         return (
           <LetterContainer
             key={letterIndex}
-            onLetterGuess={handleLetterGuess(letterIndex)}
+            onLetterGuess={handleLetterGuess(letterIndex, wordIndex)}
             index={letterIndex}
             focusLetter={isCurrentWord && activeLetterIndex}
             // value={wordState[letterIndex]}
