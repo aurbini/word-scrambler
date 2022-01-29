@@ -37,7 +37,6 @@ const WordContainer = (props) => {
         updateWordIndexValue(wordState, guessedLetterIndex, guessedLetter)
       );
       if (guessedLetter !== "") {
-        console.log({ activeLetterIndex });
         setActiveLetterIndex((activeLetterIndex) => activeLetterIndex + 1);
       }
     };
@@ -52,6 +51,14 @@ const WordContainer = (props) => {
       setActiveLetterIndex(wordState.indexOf((letter) => letter === ""));
     }
   }, [wordState]);
+
+  useEffect(() => {
+    console.log({
+      wordState: wordState,
+      activeLetter: activeLetterIndex,
+      isCurrentWord: isCurrentWord,
+    });
+  });
 
   useEffect(() => {
     if (isCurrentWord && activeLetterIndex === null) {
