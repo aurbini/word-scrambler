@@ -9,7 +9,7 @@ const LetterContainer = (props) => {
   //Does the current letter match the focused letter, true or false
   const isFocusLetter = focusLetter === index;
 
-  useEffect(() => {}, []);
+  useEffect(() => {console.log(isFocusLetter);}, []);
 
   return (
     <div className='letter-container'>

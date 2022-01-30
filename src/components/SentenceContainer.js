@@ -13,12 +13,14 @@ const SentenceContainer = (props) => {
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
 
   useEffect(() => {
+    console.log(guessedSentence.current);
     if (compareTwoArrays(guessedSentence.current, originalWords)) {
       setShowNextButton(true);
     }
   }, [currentWordIndex, originalWords, shuffledWords.length]);
 
   const handleWordComplete = (wordIndex) => (guessedWord) => {
+    console.log({ guessedWord: guessedWord });
     setCurrentWordIndex(wordIndex + 1);
     guessedSentence.current = updateWordIndexValue(
       guessedSentence.current,
