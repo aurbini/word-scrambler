@@ -7,14 +7,13 @@ import { stringToArrayOfWords, shuffleSentence } from "./utils";
 
 function App() {
   const [shuffledWordsArray, setShuffledWordsArray] = useState([]);
-  const [counter, setCounter] = useState(1);
   const [score, setScore] = useState(0);
   const [originalSentence, setOriginalSentence] = useState([]);
 
   let gameContent = "";
   useEffect(() => {
-    if (counter !== 11) {
-      fetch(`https://api.hatchways.io/assessment/sentences/${counter}`)
+    if (score !== 11) {
+      fetch(`https://api.hatchways.io/assessment/sentences/${score + 1}`)
         .then((response) => response.json())
         .then(({ data }) => {
           const arrayOfWords = stringToArrayOfWords(data.sentence);
@@ -23,13 +22,12 @@ function App() {
           setShuffledWordsArray(shuffledSentence);
         });
     }
-  }, [counter]);
+  }, [score]);
 
   const handleNextButtonClick = (event) => {
     event.preventDefault();
 
     setScore((score) => score + 1);
-    setCounter((counter) => counter + 1);
     setShuffledWordsArray([]);
   };
 
@@ -45,7 +43,7 @@ function App() {
   const shuffledSentenceString = shuffledWordsArray.join(" ");
   return (
     <div className="App">
-      {score === 10 ? <WinModal /> : ""}
+      {score === 10 && <WinModal /> }
       <div className="game-wrapper">
         <div className="heading-container" id={"scrambled-word"}>
           <h1 className="scrambled-sentence">{shuffledSentenceString} </h1>
